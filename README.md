@@ -34,5 +34,8 @@ pip install -r requirements.txt
 ./walk-matrix.py -i buildings.csv -o matrix.json
 # below is by duration; or by distance
 ./walk -i matrix.json -o order-duration.json
-./geojson.py -c buildings.csv -r order-duration.json
+# optionally, output an approximation of the route
+./geojson.py -c buildings.csv -r order-duration.json -o geoline.json
+# for Notion import
+./to-notion.py -c buildings.csv -j order-duration.json -o export.csv
 ```
