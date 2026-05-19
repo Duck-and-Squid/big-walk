@@ -49,15 +49,27 @@ def main():
         )
         sys.exit(1)
 
-    # Reorder rows and inject explicit step number
+    # Reorder rows, inject explicit step number, and generate maps URL
     sorted_rows = []
     for step_num, idx in enumerate(indices, start=1):
         row = rows[idx].copy()
         row["Route Order"] = step_num
+
+        # Resolve lat/lng header names dynamically
+        lat = row.get("lat") or row.get("latitude")
+        lng = row.get("lng") or row.get("longitude") or row.get("long")
+
+        if lat and lng:
+            row["gmap"] = f"https://www.google.com/maps/search/?api=1&query={lat},{lng}"
+        else:
+            row["gmap"] = ""
+
         sorted_rows.append(row)
 
-    # Write output CSV with the new column first
-    output_fieldnames = ["Route Order"] + [f for f in fieldnames if f != "Route Order"]
+    # Structural alignment for the output schema
+    output_fieldnames = ["Route Order", "gmap"] + [
+        f for f in fieldnames if f not in ("Route Order", "gmap")
+    ]
 
     try:
         with open(args.output, "w", newline="", encoding="utf-8") as f:
