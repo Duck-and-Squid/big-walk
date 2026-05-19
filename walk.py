@@ -50,7 +50,9 @@ def load_matrix_data(filepath, metric):
         matrix_key = "durations_s" if metric == "duration" else "distances_m"
 
         if matrix_key not in data:
-            raise KeyError(f"Expected matrix key '{matrix_key}' not found in input JSON.")
+            raise KeyError(
+                f"Expected matrix key '{matrix_key}' not found in input JSON."
+            )
 
         matrix = data[matrix_key]
         return names, matrix
@@ -140,24 +142,32 @@ def main():
 
     logging.info(f"Loading matrix data from {args.input}...")
     names, matrix = load_matrix_data(args.input, args.metric)
-    
+
     num_locations = len(names)
     if num_locations < 2:
-        logging.error("At least 2 locations are required to compute an optimal ordering.")
+        logging.error(
+            "At least 2 locations are required to compute an optimal ordering."
+        )
         return
 
-    logging.info(f"Optimizing order for {num_locations} locations based on {args.metric}...")
-    logging.info(f"Route Type: {'Round-trip Loop' if is_closed_loop else 'One-way Linear Path'}")
+    logging.info(
+        f"Optimizing order for {num_locations} locations based on {args.metric}..."
+    )
+    logging.info(
+        f"Route Type: {'Round-trip Loop' if is_closed_loop else 'One-way Linear Path'}"
+    )
 
     # Step 1: Get an excellent starting seed tour
     initial_tour = solve_tsp_nearest_neighbor(matrix, closed=is_closed_loop)
-    
+
     # Step 2: Fine-tune the path edges using 2-opt local search optimization
-    optimal_indices, final_cost = optimize_tsp_2opt(initial_tour, matrix, closed=is_closed_loop)
+    optimal_indices, final_cost = optimize_tsp_2opt(
+        initial_tour, matrix, closed=is_closed_loop
+    )
 
     # Map indices back to names
     optimal_names = [names[idx] for idx in optimal_indices]
-    
+
     # Construct structured output metrics
     unit = "meters" if args.metric == "distance" else "seconds"
     logging.info(f"Optimization complete! Optimal cost: {final_cost:,.2f} {unit}")

@@ -91,7 +91,7 @@ def get_chunked_matrix(
     # Create sequential chunks of indices
     indices = list(range(n))
     chunks = [indices[i : i + chunk_size] for i in range(0, n, chunk_size)]
-    
+
     # Ensure cache directory exists
     os.makedirs(cache_dir, exist_ok=True)
 
@@ -101,19 +101,25 @@ def get_chunked_matrix(
     logging.info(f"Splitting matrix into {total_batches} sub-requests...")
 
     batch_num = 1
-    for (r_idx, row_chunk), (c_idx, col_chunk) in itertools.product(enumerated_chunks, repeat=2):
+    for (r_idx, row_chunk), (c_idx, col_chunk) in itertools.product(
+        enumerated_chunks, repeat=2
+    ):
         cache_filename = f"chunk_r{r_idx}_c{c_idx}.json"
         cache_filepath = os.path.join(cache_dir, cache_filename)
 
         # Check if this specific sub-matrix chunk is already cached on disk
         if os.path.exists(cache_filepath):
-            logging.info(f"[{batch_num}/{total_batches}] Loading cached grid element: {cache_filename}")
+            logging.info(
+                f"[{batch_num}/{total_batches}] Loading cached grid element: {cache_filename}"
+            )
             with open(cache_filepath, "r", encoding="utf-8") as f:
                 result = json.load(f)
             from_cache = True
         else:
-            logging.info(f"[{batch_num}/{total_batches}] Cache miss. Fetching API data for: {cache_filename}")
-            
+            logging.info(
+                f"[{batch_num}/{total_batches}] Cache miss. Fetching API data for: {cache_filename}"
+            )
+
             unique_indices = list(dict.fromkeys(row_chunk + col_chunk))
             req_coords = [coords[i] for i in unique_indices]
 
@@ -128,7 +134,7 @@ def get_chunked_matrix(
                     profile="foot-walking",
                     metrics=["distance", "duration"],
                 )
-                
+
                 # Immediately write the successful response payload to disk
                 with open(cache_filepath, "w", encoding="utf-8") as f:
                     json.dump(result, f, indent=2)
@@ -147,7 +153,7 @@ def get_chunked_matrix(
         # Only sleep if we performed an actual network call and it's not the final batch
         if not from_cache and batch_num < total_batches:
             time.sleep(sleep_time)
-            
+
         batch_num += 1
 
     return distances, durations
@@ -191,11 +197,11 @@ def main():
 
     # Fetch Data (with caching lookup enabled)
     distances, durations = get_chunked_matrix(
-        client=client, 
-        coords=coords, 
-        chunk_size=args.chunk_size, 
+        client=client,
+        coords=coords,
+        chunk_size=args.chunk_size,
         sleep_time=args.sleep,
-        cache_dir=args.cache_dir
+        cache_dir=args.cache_dir,
     )
 
     # Save Output
