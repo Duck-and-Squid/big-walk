@@ -34,6 +34,7 @@ BLACKLIST = (
     "Rieber",
     "Delta Terrace",
     "Canyon Point",
+    "Courtside",
     "Hedrick",
     "Hitch",
     "Saxon",
