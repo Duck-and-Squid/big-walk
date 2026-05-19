@@ -1,4 +1,5 @@
 .env
+walk
 *.csv
 *.log
 *.json
