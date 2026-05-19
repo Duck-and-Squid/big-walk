@@ -56,7 +56,9 @@ def main():
     is_round_trip = route_data.get("route_type") == "round-trip"
 
     if not indices:
-        print("Error: 'optimal_order_indices' missing from route file.", file=sys.stderr)
+        print(
+            "Error: 'optimal_order_indices' missing from route file.", file=sys.stderr
+        )
         sys.exit(1)
 
     # Map indices to the [Lng, Lat] pairs
@@ -76,47 +78,37 @@ def main():
             "properties": {
                 "name": "Optimized TSP Route",
                 "stroke": "#3388ff",
-                "stroke-width": 4
+                "stroke-width": 4,
             },
-            "geometry": {
-                "type": "LineString",
-                "coordinates": ordered_stops
-            }
+            "geometry": {"type": "LineString", "coordinates": ordered_stops},
         },
         {
             "type": "Feature",
             "properties": {
                 "name": "Start/End Point" if is_round_trip else "Start Point",
                 "marker-color": "#00aa00",
-                "marker-symbol": "star"
+                "marker-symbol": "star",
             },
-            "geometry": {
-                "type": "Point",
-                "coordinates": start_point
-            }
-        }
+            "geometry": {"type": "Point", "coordinates": start_point},
+        },
     ]
 
     # If it's a one-way trip, add a distinct end point marker
     if not is_round_trip:
-        features.append({
-            "type": "Feature",
-            "properties": {
-                "name": "End Point",
-                "marker-color": "#aa0000",
-                "marker-symbol": "square"
-            },
-            "geometry": {
-                "type": "Point",
-                "coordinates": end_point
+        features.append(
+            {
+                "type": "Feature",
+                "properties": {
+                    "name": "End Point",
+                    "marker-color": "#aa0000",
+                    "marker-symbol": "square",
+                },
+                "geometry": {"type": "Point", "coordinates": end_point},
             }
-        })
+        )
 
     # Build the standard GeoJSON FeatureCollection structure
-    geojson_data = {
-        "type": "FeatureCollection",
-        "features": features
-    }
+    geojson_data = {"type": "FeatureCollection", "features": features}
 
     # Convert the dictionary to a formatted JSON string
     geojson_string = json.dumps(geojson_data, indent=2)

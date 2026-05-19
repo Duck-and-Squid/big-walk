@@ -4,7 +4,6 @@ import csv
 import json
 import sys
 
-
 RELEVANT = ("name", "lat", "lng", "region")
 
 HILL_BBOX = (34.069156, -118.455362, 34.076905, -118.448861)
@@ -46,7 +45,7 @@ BLACKLIST = (
     "Bus Terminal, Hilgard",
     "Police Station",
     "PS 27 Generator Building",
-    "Marion Davies Children's Health Center"
+    "Marion Davies Children's Health Center",
 )
 
 

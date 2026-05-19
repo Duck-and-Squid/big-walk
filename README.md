@@ -1,6 +1,10 @@
-# UCLA Knowledge
+# Big Walk
+
+Location extraction and route planning for the big walk. Largely vibe-coded.
 
 ## Setup
+
+Assuming you have Homebrew installed.
 
 Tested with Homebrew clang version 22.1.4:
 
@@ -9,7 +13,7 @@ brew install llvm libomp
 # Verify this is using homebrew; should be something like:
 #   /opt/homebrew/opt/llvm/bin/clang++
 which clang++
-# You may need to follow some additional instructions to setup LLVM.
+# You may need to follow some additional instructions to setup Homebrew LLVM.
 # Be sure to also set OpenMP_ROOT accordingly for this to compile.
 clang++ -O3 -fopenmp -o walk walk.cpp -Iinclude
 ```
