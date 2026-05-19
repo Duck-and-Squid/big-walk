@@ -4,11 +4,18 @@ import csv
 import json
 import sys
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Prepare sorted CSV for Notion import.")
-    parser.add_argument("-c", "--csv", required=True, help="Path to input buildings.csv")
+    parser = argparse.ArgumentParser(
+        description="Prepare sorted CSV for Notion import."
+    )
+    parser.add_argument(
+        "-c", "--csv", required=True, help="Path to input buildings.csv"
+    )
     parser.add_argument("-j", "--json", required=True, help="Path to input order.json")
-    parser.add_argument("-o", "--output", required=True, help="Path to output sorted CSV")
+    parser.add_argument(
+        "-o", "--output", required=True, help="Path to output sorted CSV"
+    )
     args = parser.parse_args()
 
     # Load the optimized order indices
@@ -36,7 +43,10 @@ def main():
 
     # Validate indices bounds against CSV row count
     if max(indices) >= len(rows):
-        print("ERROR: JSON indices do not match the number of rows in the CSV.", file=sys.stderr)
+        print(
+            "ERROR: JSON indices do not match the number of rows in the CSV.",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     # Reorder rows and inject explicit step number
@@ -48,7 +58,7 @@ def main():
 
     # Write output CSV with the new column first
     output_fieldnames = ["Route Order"] + [f for f in fieldnames if f != "Route Order"]
-    
+
     try:
         with open(args.output, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=output_fieldnames)
@@ -58,6 +68,7 @@ def main():
     except Exception as e:
         print(f"ERROR: Failed to write output CSV: {e}", file=sys.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
